@@ -8,14 +8,28 @@
 
 import SwiftUI
 
+
 struct SwiftUIView: View {
+    @State var zoomPhoto = true
+    var album: Album
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            HStack {
+                Text(album.title).fontWeight(.heavy).font(.system(size: 16)).padding(.horizontal)
+            }.frame(width: 400, height: 100)
+            .foregroundColor(.white)
+            .background(Color.gray)
+            Spacer()
+            Image("rec").frame(width: 300, height: 300).background(Color.blue).padding(.bottom, 100).onTapGesture {
+                self.zoomPhoto.toggle()
+            }
+            Spacer()
+        }
     }
 }
 
 struct SwiftUIView_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftUIView()
+        SwiftUIView(album: Album(albumId: 0, id: 0, title: "Test", url: "", thumbnailUrl: ""))
     }
 }

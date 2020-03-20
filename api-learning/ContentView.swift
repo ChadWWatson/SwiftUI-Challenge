@@ -7,18 +7,18 @@
 //
 
 import SwiftUI
-import SDWebImage
 
 struct ContentView: View {
     
     @ObservedObject var getData = datas()
     
     var body: some View {
-//
         NavigationView{
             List(getData.jsonData) {i in
                 
-                ListRow(name: i.title)
+                NavigationLink(destination: SwiftUIView(album: i)) {
+                    ListRow(url: i.thumbnailUrl, name: i.title)
+                }
             }.navigationBarTitle("Isaac Learns Swift")
         }
     }
@@ -31,7 +31,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 class datas : ObservableObject {
-    @Published var jsonData = [datatype]()
+    @Published var jsonData = [Album]()
     
     init() {
         let session = URLSession(configuration: .default)
@@ -39,7 +39,7 @@ class datas : ObservableObject {
         session.dataTask(with: URL(string: "https://jsonplaceholder.typicode.com/photos")!) { (data, _, _) in
             
             do {
-                let fetch = try JSONDecoder().decode([datatype].self, from: data!)
+                let fetch = try JSONDecoder().decode([Album].self, from: data!)
                 
                 DispatchQueue.main.async {
                     self.jsonData = fetch
@@ -52,7 +52,7 @@ class datas : ObservableObject {
     }
 }
 
-struct datatype : Identifiable, Decodable {
+struct Album : Identifiable, Decodable {
     var albumId: Int
     var id: Int
     var title: String
@@ -62,22 +62,23 @@ struct datatype : Identifiable, Decodable {
 
 struct ListRow : View {
     
-//    var url :  String
+    var url :  String
     var name : String
     
     var body : some View {
         HStack {
-//            Image(url: URL(string: url)).resizable().frame(width: 60, height: 60)
-//                .clipShape(Rectangle())
-            
-            
-            Button(action: {}, label: {
-            Text(name).fontWeight(.heavy).padding(.leading)
-            }).padding()
-            .foregroundColor(.white)
-            .background(Color.blue)
-            .cornerRadius(8)
-                .aspectRatio(contentMode: .fill)
+            Spacer()
+                HStack {
+                    Rectangle().fill(Color.blue).frame(width: 40, height: 40);
+                    Spacer()
+                    Text(name).fontWeight(.heavy).padding(.leading)
+                    }
+                .padding()
+                       .frame(width: 290)
+                               .foregroundColor(.white)
+                               .background(Color.gray)
+                               .cornerRadius(8)
+            Spacer()
         }
     }
 }
